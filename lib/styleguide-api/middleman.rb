@@ -10,7 +10,9 @@ class StyleGuideAPI::MiddlemanExtension < ::Middleman::Extension
       StyleGuideAPI.live = true
     end
 
-    StyleGuideAPI.add_templates options_hash[:templates]
+    if options_hash.has_key?(:templates)
+      StyleGuideAPI.add_templates options_hash[:templates]
+    end
   end
 
   helpers StyleGuideAPI::Helpers
