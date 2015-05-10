@@ -1,4 +1,5 @@
 require "styleguide-api/version"
+require "tilt"
 
 module StyleGuideAPI
 
@@ -23,6 +24,17 @@ module StyleGuideAPI
         type: type
       }
     end
+  end
+
+  def self.render(template_name, locals = {}, &block)
+    template = template_for(template_name)
+    template.render(Object.new, locals, &block)
+  end
+
+  def self.template_for(name)
+    @templates[name] if @templates[name]
+    template = data[:templates][name]
+    @templates[name] = Tilt[template[:type]].new { template[:source] }
   end
 
 end
