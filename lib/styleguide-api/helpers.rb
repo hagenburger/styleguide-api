@@ -4,4 +4,10 @@ module StyleGuideAPI::Helpers
     StyleGuideAPI::render(name, locals, &block)
   end
 
+  def style_css
+    StyleGuideAPI.stylesheets.map do |url|
+      %Q(<link href="#{url}" rel="stylesheet">)
+    end.join("\n")
+  end
+
 end
