@@ -16,6 +16,7 @@ module StyleGuideAPI
     @template_paths = {}
     @data = nil
     @theme = nil
+    @stylesheets = {}
   end
   initialize
 
@@ -38,8 +39,8 @@ module StyleGuideAPI
   end
 
   def self.add_stylesheet(file)
-    data[theme]["stylesheets"] ||= []
-    data[theme]["stylesheets"] << file
+    @stylesheets[theme] ||= []
+    @stylesheets[theme] << file
   end
 
   def self.render(template_name, locals = {}, &block)
@@ -67,10 +68,17 @@ module StyleGuideAPI
     data.to_json
   end
 
+  def self.stylesheets
+    data[theme]["stylesheets"] || []
+  end
+
   private
   def self.load_templates
     themes.each do |theme|
-      @data[theme] ||= { "templates" => {} }
+      @data[theme] ||= {
+        "templates" => {},
+        "stylesheets" => @stylesheets[theme]
+      }
       @template_paths[theme].each do |glob|
         path = glob.split("*").first
         Dir.glob(glob).each do |file|
