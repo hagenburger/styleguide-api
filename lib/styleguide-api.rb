@@ -58,6 +58,10 @@ module StyleGuideAPI
     (@template_paths.keys + (@data ? @data.keys : [])).uniq
   end
 
+  def self.to_json
+    data.to_json
+  end
+
   private
   def self.load_templates
     themes.each do |theme|
