@@ -21,7 +21,7 @@ module StyleGuideAPI
   initialize
 
   def self.data
-    return @data if @data and not live
+    return @data if @data and not (live and @template_paths.any?)
     @data = {}
     load_templates
     @data
