@@ -1,4 +1,5 @@
 require "styleguide-api/version"
+require "styleguide-api/helpers"
 require "tilt"
 
 module StyleGuideAPI
