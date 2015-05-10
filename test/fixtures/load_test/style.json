@@ -1,0 +1,10 @@
+{
+  "my-theme": {
+    "templates": {
+      "my-template": {
+        "source": ".my-template",
+        "type": "haml"
+      }
+    }
+  }
+}

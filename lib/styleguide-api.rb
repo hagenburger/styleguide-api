@@ -1,6 +1,8 @@
 require "styleguide-api/version"
 require "styleguide-api/helpers"
 require "tilt"
+require "open-uri"
+require "json"
 
 module StyleGuideAPI
   class << self
@@ -24,6 +26,11 @@ module StyleGuideAPI
     @data
   end
 
+  def self.load(uri)
+    json = open(uri).read
+    @data = JSON.parse(json)
+  end
+
   def self.add_templates(glob, options = {})
     current_theme = options[:theme] || theme
     @template_paths[current_theme] ||= []
@@ -38,9 +45,9 @@ module StyleGuideAPI
 
   def self.template_for(name)
     @templates[theme][name] if @templates[theme] && @templates[theme][name]
-    template = data[theme][:templates][name]
+    template = data[theme]["templates"][name]
     @templates[theme] ||= {}
-    @templates[theme][name] = Tilt[template[:type]].new { template[:source] }
+    @templates[theme][name] = Tilt[template["type"]].new { template["source"] }
   end
 
   def self.theme
@@ -54,15 +61,15 @@ module StyleGuideAPI
   private
   def self.load_templates
     themes.each do |theme|
-      @data[theme] ||= { templates: {} }
+      @data[theme] ||= { "templates" => {} }
       @template_paths[theme].each do |glob|
         path = glob.split("*").first
         Dir.glob(glob).each do |file|
           key, type = file.sub("/_", "/").sub(/^#{path}(.+?)\.(\w+)$/, "\\1"), $2
           if Tilt[type]
-            @data[theme][:templates][key] = {
-              source: File.read(file).strip,
-              type: type
+            @data[theme]["templates"][key] = {
+              "source" => File.read(file).strip,
+              "type" => type
             }
           end
         end

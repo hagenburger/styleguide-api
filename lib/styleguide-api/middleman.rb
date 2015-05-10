@@ -21,8 +21,8 @@ class StyleGuideAPI::MiddlemanExtension < ::Middleman::Extension
     def style_template(name, locals = {}, &block)
       locals[:scope] = self
       if block_given?
-        template = StyleGuideAPI.data[StyleGuideAPI.theme][:templates][name]
-        type = template[:type].to_sym
+        template = StyleGuideAPI.data[StyleGuideAPI.theme]["templates"][name]
+        type = template["type"].to_sym
         handler_class = ::Padrino::Helpers::OutputHelpers.handlers[type]
         html = handler_class.new(self).capture_from_template(&block)
         block = Proc.new { html }
