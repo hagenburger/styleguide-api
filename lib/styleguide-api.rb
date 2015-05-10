@@ -37,6 +37,11 @@ module StyleGuideAPI
     @template_paths[current_theme] << glob
   end
 
+  def self.add_stylesheet(file)
+    data[theme]["stylesheets"] ||= []
+    data[theme]["stylesheets"] << file
+  end
+
   def self.render(template_name, locals = {}, &block)
     scope = locals.delete(:scope) || Object.new
     template = template_for(template_name)

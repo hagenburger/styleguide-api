@@ -49,6 +49,12 @@ describe StyleGuideAPI do
       assert_equal "<div class='my-template'></div>", StyleGuideAPI.render("my-template").strip
     end
 
+    it "should add a CSS file" do
+      StyleGuideAPI.add_templates "test/fixtures/load_test/**/*.*"
+      StyleGuideAPI.add_stylesheet "styles.css"
+      assert_equal %w(styles.css), StyleGuideAPI.data["default"]["stylesheets"]
+    end
+
   end
 
 end

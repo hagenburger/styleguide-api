@@ -13,6 +13,14 @@ class StyleGuideAPI::MiddlemanExtension < ::Middleman::Extension
     if options_hash.has_key?(:templates)
       StyleGuideAPI.add_templates options_hash[:templates]
     end
+
+    if options_hash.has_key?(:load)
+      StyleGuideAPI.load options_hash[:load]
+    end
+
+    if options_hash.has_key?(:theme)
+      StyleGuideAPI.theme = options_hash[:theme]
+    end
   end
 
   helpers StyleGuideAPI::Helpers
