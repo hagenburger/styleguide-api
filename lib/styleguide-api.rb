@@ -5,48 +5,65 @@ require "tilt"
 module StyleGuideAPI
   class << self
     attr_accessor :live
+    attr_accessor :theme
   end
 
   def self.initialize
     @live = false
     @templates = {}
-    @template_paths = []
+    @template_paths = {}
     @data = nil
+    @theme = nil
   end
   initialize
 
   def self.data
     return @data if @data and not live
-    @data = { templates: {} }
+    @data = {}
     load_templates
     @data
   end
 
-  def self.add_templates(glob)
-    @template_paths << glob
+  def self.add_templates(glob, options = {})
+    current_theme = options[:theme] || theme
+    @template_paths[current_theme] ||= []
+    @template_paths[current_theme] << glob
   end
 
   def self.render(template_name, locals = {}, &block)
+    scope = locals.delete(:scope) || Object.new
     template = template_for(template_name)
-    template.render(Object.new, locals, &block)
+    template.render(scope, locals, &block)
   end
 
   def self.template_for(name)
-    @templates[name] if @templates[name]
-    template = data[:templates][name]
-    @templates[name] = Tilt[template[:type]].new { template[:source] }
+    @templates[theme][name] if @templates[theme] && @templates[theme][name]
+    template = data[theme][:templates][name]
+    @templates[theme] ||= {}
+    @templates[theme][name] = Tilt[template[:type]].new { template[:source] }
+  end
+
+  def self.theme
+    @theme ||= themes.first || "default"
+  end
+
+  def self.themes
+    (@template_paths.keys + (@data ? @data.keys : [])).uniq
   end
 
   private
   def self.load_templates
-    @template_paths.each do |glob|
-      path = glob.split("*").first
-      Dir.glob(glob).each do |file|
-        key, type = file.sub("/_", "/").sub(/^#{path}(.+?)\.(\w+)$/, "\\1"), $2
-        @data[:templates][key] = {
-          source: File.read(file).strip,
-          type: type
-        }
+    themes.each do |theme|
+      @data[theme] ||= { templates: {} }
+      @template_paths[theme].each do |glob|
+        path = glob.split("*").first
+        Dir.glob(glob).each do |file|
+          key, type = file.sub("/_", "/").sub(/^#{path}(.+?)\.(\w+)$/, "\\1"), $2
+          @data[theme][:templates][key] = {
+            source: File.read(file).strip,
+            type: type
+          }
+        end
       end
     end
   end

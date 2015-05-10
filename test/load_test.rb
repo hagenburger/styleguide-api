@@ -20,11 +20,11 @@ describe StyleGuideAPI do
           type: "erb"
         }
       }
-      assert_equal(data, StyleGuideAPI.data[:templates])
+      assert_equal(data, StyleGuideAPI.data["default"][:templates])
 
       FileUtils.cp "test/fixtures/load_test/user.haml",
                    "test/fixtures/load_test/new-user.haml"
-      assert_equal(data, StyleGuideAPI.data[:templates])
+      assert_equal(data, StyleGuideAPI.data["default"][:templates])
 
       FileUtils.rm "test/fixtures/load_test/new-user.haml"
     end
@@ -33,12 +33,12 @@ describe StyleGuideAPI do
       StyleGuideAPI.live = true
       StyleGuideAPI.add_templates "test/fixtures/load_test/**/*.*"
       assert_equal %w(products/ball user),
-                   StyleGuideAPI.data[:templates].keys.sort
+                   StyleGuideAPI.data["default"][:templates].keys.sort
 
       FileUtils.cp "test/fixtures/load_test/user.haml",
                    "test/fixtures/load_test/new-user.haml"
       assert_equal %w(new-user products/ball user),
-                   StyleGuideAPI.data[:templates].keys.sort
+                   StyleGuideAPI.data["default"][:templates].keys.sort
 
       FileUtils.rm "test/fixtures/load_test/new-user.haml"
     end
