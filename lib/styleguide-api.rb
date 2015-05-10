@@ -69,3 +69,5 @@ module StyleGuideAPI
   end
 
 end
+
+require "styleguide-api/middleman" if defined?(Middleman)
