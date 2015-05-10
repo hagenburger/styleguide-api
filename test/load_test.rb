@@ -9,8 +9,8 @@ describe StyleGuideAPI do
   describe "loading templates" do
 
     it "should load templates" do
-      StyleGuideAPI.load_templates "test/fixtures/load_test/**/*.*"
-      assert_equal({
+      StyleGuideAPI.add_templates "test/fixtures/load_test/**/*.*"
+      data = {
         "user" => {
           source: ".user= name",
           type: "haml"
@@ -19,7 +19,28 @@ describe StyleGuideAPI do
           source: "<div class=\"product\"><%= name %></div>",
           type: "erb"
         }
-      }, StyleGuideAPI.data[:templates])
+      }
+      assert_equal(data, StyleGuideAPI.data[:templates])
+
+      FileUtils.cp "test/fixtures/load_test/user.haml",
+                   "test/fixtures/load_test/new-user.haml"
+      assert_equal(data, StyleGuideAPI.data[:templates])
+
+      FileUtils.rm "test/fixtures/load_test/new-user.haml"
+    end
+
+    it "should dynamically load templates" do
+      StyleGuideAPI.live = true
+      StyleGuideAPI.add_templates "test/fixtures/load_test/**/*.*"
+      assert_equal %w(products/ball user),
+                   StyleGuideAPI.data[:templates].keys.sort
+
+      FileUtils.cp "test/fixtures/load_test/user.haml",
+                   "test/fixtures/load_test/new-user.haml"
+      assert_equal %w(new-user products/ball user),
+                   StyleGuideAPI.data[:templates].keys.sort
+
+      FileUtils.rm "test/fixtures/load_test/new-user.haml"
     end
 
   end

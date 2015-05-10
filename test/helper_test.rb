@@ -3,7 +3,7 @@ require "test_helper"
 describe StyleGuideAPI::Helpers do
 
   before do
-    StyleGuideAPI.load_templates "test/fixtures/render_test/*.haml"
+    StyleGuideAPI.add_templates "test/fixtures/render_test/*.haml"
     @helpers = Class.new do
       extend StyleGuideAPI::Helpers
     end

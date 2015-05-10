@@ -4,7 +4,7 @@ require "tilt/haml"
 describe StyleGuideAPI do
 
   before do
-    StyleGuideAPI.load_templates "test/fixtures/render_test/*.haml"
+    StyleGuideAPI.add_templates "test/fixtures/render_test/*.haml"
   end
 
   after do
