@@ -59,10 +59,12 @@ module StyleGuideAPI
         path = glob.split("*").first
         Dir.glob(glob).each do |file|
           key, type = file.sub("/_", "/").sub(/^#{path}(.+?)\.(\w+)$/, "\\1"), $2
-          @data[theme][:templates][key] = {
-            source: File.read(file).strip,
-            type: type
-          }
+          if Tilt[type]
+            @data[theme][:templates][key] = {
+              source: File.read(file).strip,
+              type: type
+            }
+          end
         end
       end
     end
