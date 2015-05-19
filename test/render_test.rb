@@ -28,6 +28,11 @@ describe StyleGuideAPI do
       HTML
     end
 
+    it "should fail with a helpful error when the template is not known" do
+      assert_raises StyleGuideAPI::UnknownTemplateError do
+        StyleGuideAPI.render("does_not_exist")
+      end
+    end
   end
 
 end

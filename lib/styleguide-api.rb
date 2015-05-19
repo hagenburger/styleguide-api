@@ -10,6 +10,16 @@ module StyleGuideAPI
     attr_accessor :theme
   end
 
+  class UnknownTemplateError < StandardError
+    def initialize(template_name)
+      @template_name = template_name
+    end
+
+    def message
+      "Template '#{@template_name}' is not known."
+    end
+  end
+
   def self.initialize
     @live = false
     @templates = {}
@@ -51,7 +61,9 @@ module StyleGuideAPI
 
   def self.template_for(name)
     @templates[theme][name] if @templates[theme] && @templates[theme][name]
-    template = data[theme]["templates"][name]
+    template = data[theme]["templates"].fetch(name) do
+      fail UnknownTemplateError, name
+    end
     @templates[theme] ||= {}
     @templates[theme][name] = Tilt[template["type"]].new { template["source"] }
   end
