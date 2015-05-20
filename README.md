@@ -1,6 +1,8 @@
 # Style Guide API
 
-TODO: Write a gem description
+This Gem will turn your style guide into an API by providing all templates to consuming applications via JSON.
+
+It supports all templating engines supported by [Tilt](https://github.com/rtomayko/tilt#readme) such as ERB and Haml.
 
 
 ## Installation
